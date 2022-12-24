@@ -30,7 +30,12 @@ def set_up_board():
     while len(index_not_allowed) < 10:
         index_not_allowed.append(generate_random_index(index_not_allowed))
 
+    for i in index_not_allowed:
+        board[i[0]][i[1]] = 1
 
-minesweeper_board_10_10 = generate_random_index([])
+    return board
 
+
+mine_map_10_10 = set_up_board()
+display_map_10_10 = np.ones((10, 10))
 a = 1

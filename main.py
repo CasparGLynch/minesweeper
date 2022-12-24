@@ -7,6 +7,7 @@ pygame.init()
 
 screen = pygame.display.set_mode(defs.window_size_main_menu)
 
+font = pygame.font.Font(None, 36)
 
 while defs.running:
     for event in pygame.event.get():
@@ -19,12 +20,8 @@ while defs.running:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            if defs.current_screen == 'Main Menu':
-                if play_rect.collidepoint(mouse_pos):
+            if play_rect.collidepoint(mouse_pos):
                     defs.current_screen = 'Play_10_10'
-            if defs.current_screen == 'Play_10_10':
-                if check_collision_10_10(mouse_pos):
-                    handle_collision_10_10(mouse_pos)
 
     if defs.current_screen == 'Main':
 
@@ -37,7 +34,7 @@ while defs.running:
         screen.blit(text, play_rect)
 
     elif defs.current_screen == 'Play_10_10':
-        play_10_10(screen, defs)
+        play_10_10(screen, defs, font)
 
     pygame.display.flip()
 pygame.quit()
