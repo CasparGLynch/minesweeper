@@ -18,7 +18,6 @@ while defs.running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             defs.running = False
-            pygame.display.flip()
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
@@ -26,7 +25,11 @@ while defs.running:
             if defs.current_screen == 'Main':
                 if event.key == pygame.K_RETURN:
                     defs.current_screen = 'Play_10_10'
-            pygame.display.flip()
+            elif defs.current_screen == 'Play_10_10':
+                if event.key == pygame.K_r:
+                    defs.display_map_10_10 = np.zeros((10, 10))
+                    defs.mine_map_10_10 = defs.set_up_board()
+                    defs.current_screen = 'Main'
 
         if not defs.lost:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -38,7 +41,6 @@ while defs.running:
                 if mods & pygame.KMOD_LSHIFT or mods & pygame.KMOD_RSHIFT:
                     shift_clicked_mouse = mouse_pos
                     game_clicked_mouse = (0, 0)
-            pygame.display.flip()
 
     if defs.current_screen == 'Main':
 
@@ -57,5 +59,6 @@ while defs.running:
 
         if not np.any(defs.display_map_10_10 == 0):
             defs.running = False
+    pygame.display.flip()
 
 pygame.quit()
