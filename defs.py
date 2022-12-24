@@ -11,6 +11,8 @@ main_menu_font_color = (250, 250, 250)
 current_screen = 'Main'
 square_color = (200, 200, 200)
 square_size_10_10 = 50
+num_of_mines_10_10 = 20
+lost = False
 
 
 def generate_random_index(already_taken_indexes: list):
@@ -27,7 +29,7 @@ def generate_random_index(already_taken_indexes: list):
 def set_up_board():
     board = np.zeros((10, 10))
     index_not_allowed = []
-    while len(index_not_allowed) < 10:
+    while len(index_not_allowed) < num_of_mines_10_10:
         index_not_allowed.append(generate_random_index(index_not_allowed))
 
     for i in index_not_allowed:
@@ -37,5 +39,5 @@ def set_up_board():
 
 
 mine_map_10_10 = set_up_board()
-display_map_10_10 = np.ones((10, 10))
+display_map_10_10 = np.zeros((10, 10))
 a = 1
