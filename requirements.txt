@@ -1,2 +1,2 @@
-certifi @ file:///croot/certifi_1665076670883/work/certifi
 pygame==2.1.2
+numpy==1.24.0

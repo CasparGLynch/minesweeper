@@ -11,7 +11,7 @@ main_menu_font_color = (250, 250, 250)
 current_screen = 'Main'
 square_color = (200, 200, 200)
 square_size_10_10 = 50
-num_of_mines_10_10 = 20
+num_of_mines_10_10 = 30
 lost = False
 
 

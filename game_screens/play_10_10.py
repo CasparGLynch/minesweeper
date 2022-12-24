@@ -16,11 +16,12 @@ def play_10_10(screen, defs, font, game_clicked_mouse, shift_clicked_mouse, clic
                 elif defs.mine_map_10_10[row][column] == 1:
                     defs.lost = True
                 defs.display_map_10_10[row][column] = 1
-
             if (shift_clicked_mouse[0] > column_pos) & (shift_clicked_mouse[0] < column_pos + 50) & \
-                    (shift_clicked_mouse[1] > row_pos) & (shift_clicked_mouse[1] < row_pos + 50) & \
-                    (defs.display_map_10_10[row][column] == 0):
-                defs.display_map_10_10[row][column] = 2
+                    (shift_clicked_mouse[1] > row_pos) & (shift_clicked_mouse[1] < row_pos + 50):
+                if defs.display_map_10_10[row][column] == 0:
+                    defs.display_map_10_10[row][column] = 2
+                elif defs.display_map_10_10[row][column] == 2:
+                    defs.display_map_10_10[row][column] = 0
             mines = check_how_many_mines(index=(row, column), display_map=defs.display_map_10_10,
                                          mine_map=defs.mine_map_10_10)
             current_color = defs.square_color
@@ -37,25 +38,8 @@ def play_10_10(screen, defs, font, game_clicked_mouse, shift_clicked_mouse, clic
             mine_rect = mine_surface.get_rect()
             mine_rect.center = (column_pos + 25, row_pos + 25)
             square_rect = pygame.Rect(column_pos, row_pos, defs.square_size_10_10, defs.square_size_10_10)
-            if (game_clicked_mouse[0] > column_pos) & (game_clicked_mouse[0] < column_pos + 50) & \
-                    (game_clicked_mouse[1] > row_pos) & (game_clicked_mouse[1] < row_pos + 50) & \
-                    (defs.display_map_10_10[row][column] == 0):
-                defs.display_map_10_10[row][column] = 1
-            if (shift_clicked_mouse[0] > column_pos) & (shift_clicked_mouse[0] < column_pos + 50) & \
-                    (shift_clicked_mouse[1] > row_pos) & (shift_clicked_mouse[1] < row_pos + 50) & \
-                    (defs.display_map_10_10[row][column] == 0):
-                defs.display_map_10_10[row][column] = 2
             pygame.draw.rect(screen, current_color, square_rect)
             screen.blit(mine_surface, mine_rect)
-
-
-
-def check_collision(mouse_pos):
-    pass
-
-
-def handle_collision_10_10(mouse_pos):
-    pass
 
 
 def color_picker(mines):
