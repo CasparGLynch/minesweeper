@@ -22,6 +22,11 @@ def play_10_10(screen, defs, font, game_clicked_mouse, shift_clicked_mouse, clic
                     defs.display_map_10_10[row][column] = 2
                 elif defs.display_map_10_10[row][column] == 2:
                     defs.display_map_10_10[row][column] = 0
+                elif defs.display_map_10_10[row][column] == 1:
+                    mine_display_tuple = reveal_neighbors(index=(row, column), display_map=defs.display_map_10_10,
+                                     mine_map=defs.mine_map_10_10)
+                    defs.mine_map_10_10 = mine_display_tuple[1]
+                    defs.display_map_10_10 = mine_display_tuple[0]
             mines = check_how_many_mines(index=(row, column), display_map=defs.display_map_10_10,
                                          mine_map=defs.mine_map_10_10)
             current_color = defs.square_color
@@ -29,6 +34,7 @@ def play_10_10(screen, defs, font, game_clicked_mouse, shift_clicked_mouse, clic
             if mines == -3:
                 display = 'M'
                 current_color = (255, 0, 0)
+                defs.lost = True
             if mines == -2:
                 display = 'F'
             if mines == -1:
@@ -81,6 +87,7 @@ def get_neighbors_10_10(index):
     for x in range(neighbors_x[0], neighbors_x[1]):
         for y in range(neighbors_y[0], neighbors_y[1]):
             neighbors.append((x, y))
+    neighbors.remove(index)
     return neighbors
 
 
@@ -96,3 +103,26 @@ def check_how_many_mines(index, display_map, mine_map):
         if mine_map[i[0]][i[1]] == 1:
             mine_count += 1
     return mine_count
+
+
+def check_if_completed(index, display_map, mine_map):
+    num_mines = check_how_many_mines(index, display_map, mine_map)
+    flag_count = 0
+    for i in get_neighbors_10_10(index):
+        if display_map[i[0]][i[1]] == 2:
+            flag_count += 1
+    return flag_count == num_mines
+
+
+def reveal_neighbors(index, display_map, mine_map):
+    if check_if_completed(index, display_map, mine_map):
+        neighbors = get_neighbors_10_10(index)
+
+        for neighbor in neighbors:
+            mines = check_how_many_mines(neighbor, display_map, mine_map)
+            if (mines == 0) | (mines == -1):
+                display_map[neighbor[0]][neighbor[1]] = 1
+
+        return display_map, mine_map
+    else:
+        return display_map, mine_map
