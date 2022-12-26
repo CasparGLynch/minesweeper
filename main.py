@@ -60,6 +60,7 @@ while defs.running:
 
         if not np.any(defs.display_map_10_10 == 0):
             defs.running = False
+            print('YOU WIN!')
     pygame.display.flip()
 
 pygame.quit()
