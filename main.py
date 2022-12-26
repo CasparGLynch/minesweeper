@@ -29,7 +29,8 @@ while defs.running:
                 if event.key == pygame.K_r:
                     defs.display_map_10_10 = np.zeros((10, 10))
                     defs.mine_map_10_10 = defs.set_up_board()
-                    defs.current_screen = 'Main'
+                    defs.lost = False
+                    clicks = 0
 
         if not defs.lost:
             if event.type == pygame.MOUSEBUTTONDOWN:
