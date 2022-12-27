@@ -27,7 +27,7 @@ while defs.running:
                     defs.current_screen = 'Play_10_10'
             elif defs.current_screen == 'Play_10_10':
                 if event.key == pygame.K_r:
-                    defs.display_map_10_10 = np.zeros((10, 10))
+                    defs.display_map_10_10 = np.zeros((16, 30))
                     defs.mine_map_10_10 = defs.set_up_board()
                     defs.lost = False
                     clicks = 0
