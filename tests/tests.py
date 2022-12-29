@@ -29,3 +29,8 @@ class Test_16_30(TestCase):
         index = (12, 20)
         expected_neighbors = [(11, 20), (13, 20), (11, 21), (12, 21), (13, 21), (11, 19), (12, 19), (13, 19)]
         self.assertListEqual(sorted(get_neighbors_16_30(index)), sorted(expected_neighbors))
+
+    def test__get__neighbors__bottom(self):
+        index = (15, 13)
+        expected_neighbors = [(15, 12), (15, 14), (14, 12), (14, 13), (14, 14)]
+        self.assertListEqual(sorted(get_neighbors_16_30(index)), sorted(expected_neighbors))

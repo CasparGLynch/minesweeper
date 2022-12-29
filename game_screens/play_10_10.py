@@ -4,9 +4,9 @@ import pygame
 def play_10_10(screen, defs, font, game_clicked_mouse, shift_clicked_mouse, clicks):
     pygame.display.set_caption('Minesweeper')
     screen.fill(defs.play_screen_color)
-    for row in range(15):
+    for row in range(16):
         row_pos = 40 + defs.square_size_10_10 * row + row
-        for column in range(29):
+        for column in range(30):
             column_pos = 140 + defs.square_size_10_10 * column + column
             if (game_clicked_mouse[0] > column_pos) & (game_clicked_mouse[0] < column_pos + 30) & \
                     (game_clicked_mouse[1] > row_pos) & (game_clicked_mouse[1] < row_pos + 30) & \
