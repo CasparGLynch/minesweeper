@@ -9,4 +9,4 @@ Python 3.10
 ### Installing
 Run these commands:
 - ```cd minesweeper```
-- ```run pip install -m requirements.txt```
+- ```pip install -r requirements.txt```
