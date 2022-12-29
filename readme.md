@@ -7,6 +7,6 @@ A small minesweeper game that I made so I could play it on linux.
 Python 3.10
 
 ### Installing
-'''cd minesweeper
-run pip install -m requirements.txt
-'''
+Run these commands:
+```cd minesweeper```
+```run pip install -m requirements.txt```
