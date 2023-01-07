@@ -26,5 +26,5 @@ def set_up_board():
     return board
 
 
-mine_map_10_10 = set_up_board()
-display_map_10_10 = np.zeros((16, 30))
+mine_map_16_30 = set_up_board()
+display_map_16_30 = np.zeros((16, 30))

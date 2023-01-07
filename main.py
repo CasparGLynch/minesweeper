@@ -4,19 +4,20 @@ import pygame.display
 
 from events.ChangeWindowEvent import ChangeWindowEvent
 from windows.MainMenuWindow import MainMenuWindow
+import generate_board
 
 
 class Main:
 
     def __init__(self):
         pygame.init()
-        self.s_height = 1200
-        self.s_width = 675
+        self.s_width = 1200
+        self.s_height = 675
         self.running = True
-        self.display = pygame.display.set_mode((self.s_height, self.s_width))
+        self.display = pygame.display.set_mode((self.s_width, self.s_height))
         self.screen = pygame.display
         self.display.fill((200, 200, 200))
-        self.currentWindow = MainMenuWindow(self.s_height, self.s_width)
+        self.currentWindow = MainMenuWindow(self.s_width, self.s_height)
 
     def run(self):
         self.screen.flip()

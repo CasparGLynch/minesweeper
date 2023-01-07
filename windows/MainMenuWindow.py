@@ -12,7 +12,7 @@ class MainMenuWindow(Window):
         self.screen_rectangles = []
         self.to_be_updated = []
         # creating the initial main menu display
-        self.font = pygame.font.Font(None, 36)
+        self.font = pygame.font.Font('fonts/pixel.ttf', 36)
         text_surfaces = self.font.render('Play', True, (0, 0, 0))
         text_rect = text_surfaces.get_rect()
         x = width // 2 - text_rect.width // 2
