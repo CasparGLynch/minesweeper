@@ -1,7 +1,7 @@
 import random
 from unittest import TestCase
 
-from game_screens.play_10_10 import get_neighbors_16_30
+from windows.play_10_10 import get_neighbors_16_30
 
 
 class Test_16_30(TestCase):
