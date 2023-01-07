@@ -1,17 +1,23 @@
 import sys
-
+import numpy as np
 import pygame.display
 
-from events.ChangeWindowEvent import ChangeWindowEvent
+from windows.GameWindow import GameWindow
+from windows.LoseWindow import LoseWindow
 from windows.MainMenuWindow import MainMenuWindow
 import generate_board
 
 
 class Main:
-    __frame_rate = 20
+    __frame_rate = 60
 
     def __init__(self):
         pygame.init()
+        self.windows = {
+            'LoseWindow': LoseWindow,
+            'MainMenuWindow': MainMenuWindow,
+            'GameWindow': GameWindow
+        }
         self.s_width = 1200
         self.s_height = 675
         self.running = True
@@ -33,10 +39,26 @@ class Main:
                     if event.key == pygame.K_ESCAPE:
                         self.quit()
                 event = self.currentWindow.handle_event(event)
-                if event.__class__ == ChangeWindowEvent:
-                    self.currentWindow = event.new_window(self.s_width, self.s_height)
-                    self.display.fill((200, 200, 200))
-                    self.screen.update()
+                if event is not None:
+                    if event.type_e == 'game_switch':
+                        generate_board.mine_map_16_30 = generate_board.set_up_board()
+                        generate_board.display_map_16_30 = np.zeros((16, 30))
+                        self.currentWindow = self.windows[event.new_window](self.s_width, self.s_height)
+                        self.display.fill((200, 200, 200))
+                        self.screen.update()
+                    elif event.type_e == 'restart':
+                        generate_board.mine_map_16_30 = generate_board.set_up_board()
+                        generate_board.display_map_16_30 = np.zeros((16, 30))
+                        self.currentWindow = self.windows[event.new_window](self.s_width, self.s_height)
+                        self.screen.update()
+                    elif event.type_e == 'lose':
+                        to_be_updated = self.currentWindow.display()
+                        for surface, rect in to_be_updated:
+                            self.display.fill((200, 200, 200), rect)
+                            self.display.blit(surface, (rect.x, rect.y))
+                            self.screen.update(rect)
+                        self.currentWindow = self.windows[event.new_window](self.s_width, self.s_height)
+                        self.screen.update()
 
             # update
             self.currentWindow.update(pygame.mouse.get_pos())

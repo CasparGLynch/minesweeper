@@ -1,7 +1,7 @@
 import pygame
 
+import generate_board
 from objects.Object import Object
-from generate_board import display_map_16_30, mine_map_16_30
 
 
 class TileObject(Object):
@@ -27,31 +27,31 @@ class TileObject(Object):
         return neighbors
 
     def is_revealed(self) -> bool:
-        return display_map_16_30[self.y][self.x] == 1
+        return generate_board.display_map_16_30[self.y][self.x] == 1
 
     def is_mine(self) -> bool:
-        return mine_map_16_30[self.y][self.x] == 1
+        return generate_board.mine_map_16_30[self.y][self.x] == 1
 
     def is_flag(self) -> bool:
-        return display_map_16_30[self.y][self.x] == 2
+        return generate_board.display_map_16_30[self.y][self.x] == 2
 
     def count_mines(self) -> int:
         num_of_mines = 0
         for neighbor in self.neighbors:
-            if mine_map_16_30[neighbor[0]][neighbor[1]] == 1:
+            if generate_board.mine_map_16_30[neighbor[0]][neighbor[1]] == 1:
                 num_of_mines += 1
         return num_of_mines
 
-    def handle_clicked(self, mouse_pos, right_click):
+    def handle_clicked(self, mouse_pos, right_click, shift):
         if self.rect.collidepoint(mouse_pos):
-            if display_map_16_30[self.y][self.x] == 0:
-                if right_click:
-                    display_map_16_30[self.y][self.x] = 2
+            if generate_board.display_map_16_30[self.y][self.x] == 0:
+                if right_click or shift:
+                    generate_board.display_map_16_30[self.y][self.x] = 2
                 else:
-                    display_map_16_30[self.y][self.x] = 1
-            elif display_map_16_30[self.y][self.x] == 2:
-                if right_click:
-                    display_map_16_30[self.y][self.x] = 0
+                    generate_board.display_map_16_30[self.y][self.x] = 1
+            elif generate_board.display_map_16_30[self.y][self.x] == 2:
+                if right_click or shift:
+                    generate_board.display_map_16_30[self.y][self.x] = 0
 
     def text_to_display(self):
         if self.is_flag():
