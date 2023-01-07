@@ -8,6 +8,7 @@ import generate_board
 
 
 class Main:
+    __frame_rate = 20
 
     def __init__(self):
         pygame.init()
@@ -16,12 +17,14 @@ class Main:
         self.running = True
         self.display = pygame.display.set_mode((self.s_width, self.s_height))
         self.screen = pygame.display
+        self.clock = pygame.time.Clock()
         self.display.fill((200, 200, 200))
         self.currentWindow = MainMenuWindow(self.s_width, self.s_height)
 
     def run(self):
         self.screen.flip()
         while self.running:
+            self.clock.tick(self.__frame_rate)
             # Event handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
