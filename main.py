@@ -9,10 +9,11 @@ import generate_board
 
 
 class Main:
-    __frame_rate = 60
+    __frame_rate = 30
 
     def __init__(self):
         pygame.init()
+        pygame.display.set_caption('Minesweeper')
         self.windows = {
             'LoseWindow': LoseWindow,
             'MainMenuWindow': MainMenuWindow,
@@ -22,6 +23,8 @@ class Main:
         self.s_height = 675
         self.running = True
         self.display = pygame.display.set_mode((self.s_width, self.s_height))
+        icon_surface = pygame.image.load("icon.jpg").convert_alpha()
+        pygame.display.set_icon(icon_surface)
         self.screen = pygame.display
         self.clock = pygame.time.Clock()
         self.display.fill((200, 200, 200))

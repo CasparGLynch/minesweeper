@@ -41,7 +41,6 @@ class GameWindow(Window):
             ret_val = None
             for index, (tile) in enumerate(self.screen_rects):
                 if tile.rect.collidepoint(event.pos):
-                    print(f'has_clicked_on_tile {tile.x}, {tile.y}')
                     # handle first click is mine edge case
                     if self.__clicks == 0:
                         generate_board.mine_map_16_30[tile.y][tile.x] = 0

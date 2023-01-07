@@ -12,7 +12,7 @@ class LoseWindow(Window):
         self.screen_rects = []
 
         self.font = pygame.font.Font('fonts/pixel.ttf', 36)
-        text_surfaces = self.font.render('You Lose Nerd! \nPress \'r\' to restart', True, (0, 0, 0))
+        text_surfaces = self.font.render('You Lose Nerd! Press \'r\' to restart', True, (0, 0, 0))
         text_rect = text_surfaces.get_rect()
         x = width // 2 - text_rect.width // 2
         y = height // 2 - text_rect.height // 2
