@@ -97,7 +97,20 @@ class GameWindow(Window):
     def reveal_neighbors(self, neighbors):
         loose = False
         for index in neighbors:
+
             tile = self.screen_rects[index]
+            generate_board.display_map_16_30[tile.y][tile.x] = 1
+            if tile.count_mines() == 0:
+                # add 0's neighbors to reveal now
+                reveal_1 = tile.get_non_revealed_neighbors()
+                rev_1 = [index for index, obj in enumerate(self.screen_rects) if ((obj.y, obj.x) in reveal_1)]
+                neighbors.extend(rev_1)
+                # continue if next is 0
+                reveal_2 = tile.get_0_neighbors()
+                rev_2 = [index for index, obj in enumerate(self.screen_rects) if
+                             ((obj.y, obj.x) in reveal_2)]
+                if rev_2:
+                    self.reveal_neighbors(rev_2)
             tile.surface.fill(tile.bkg_color_to_display())
 
             font = pygame.font.Font('fonts/pixel.ttf', 40)
@@ -112,6 +125,7 @@ class GameWindow(Window):
             self.screen_rects[index] = tile
             if generate_board.mine_map_16_30[tile.y][tile.x] == 1:
                 loose = True
+
         if loose:
             return ChangeWindowEvent('LoseWindow', 'lose')
 

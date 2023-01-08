@@ -42,6 +42,14 @@ class TileObject(Object):
                 num_of_mines += 1
         return num_of_mines
 
+    @classmethod
+    def count_mines_index(cls, index):
+        num_of_mines = 0
+        for neighbor in cls.get_neighbors(index[1], index[0]):
+            if generate_board.mine_map_16_30[neighbor[0]][neighbor[1]] == 1:
+                num_of_mines += 1
+        return num_of_mines
+
     def count_flags(self) -> int:
         num_of_flags = 0
         for neighbor in self.neighbors:
@@ -56,6 +64,14 @@ class TileObject(Object):
                     generate_board.display_map_16_30[self.y][self.x] = 2
                 else:
                     generate_board.display_map_16_30[self.y][self.x] = 1
+
+                    if (self.count_mines() == 0) and not (self.is_mine()):
+                        ret_val = []
+                        for neighbor in self.neighbors:
+                            if generate_board.display_map_16_30[neighbor[0]][neighbor[1]] == 0:
+                                generate_board.display_map_16_30[neighbor[0]][neighbor[1]] = 1
+                                ret_val.append((neighbor[0], neighbor[1]))
+                        return ret_val
             elif generate_board.display_map_16_30[self.y][self.x] == 2:
                 if right_click or shift:
                     generate_board.display_map_16_30[self.y][self.x] = 0
@@ -89,6 +105,23 @@ class TileObject(Object):
                 return 200, 200, 200
         else:
             return 180, 180, 180
+
+    def get_0_neighbors(self):
+        all_0_neighbors = []
+        for neighbor in self.neighbors:
+            if (self.count_mines_index(neighbor) == 0) and \
+                    (generate_board.display_map_16_30[neighbor[0]][neighbor[1]] == 0) and \
+                    (generate_board.mine_map_16_30[neighbor[0]][neighbor[1]] == 0):
+                all_0_neighbors.append(neighbor)
+        return all_0_neighbors
+
+    def get_non_revealed_neighbors(self):
+        all_0_neighbors = []
+        for neighbor in self.neighbors:
+            if (generate_board.display_map_16_30[neighbor[0]][neighbor[1]] == 0) and \
+                    (generate_board.mine_map_16_30[neighbor[0]][neighbor[1]] == 0):
+                all_0_neighbors.append(neighbor)
+        return all_0_neighbors
 
     def text_color_to_display(self):
         if self.is_revealed():
