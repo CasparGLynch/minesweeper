@@ -11,8 +11,14 @@ class TimerObject(Object):
         self.y = index[0]
         self.surface = surface
         self.rect = rect
-        self.start_time = time.time()
+        self.start_time = 00.00
 
     def get_elapsed(self):
-        elapsed_time = time.time() - self.start_time
-        return f'{elapsed_time:.2f}'
+        if not self.start_time == 00.00:
+            elapsed_time = time.time() - self.start_time
+            return f'{elapsed_time:.2f}'
+        else:
+            return '0.00'
+
+    def start_timer(self):
+        self.start_time = time.time()

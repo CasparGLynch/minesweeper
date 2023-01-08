@@ -55,6 +55,11 @@ class GameWindow(Window):
                 if tile.rect.collidepoint(event.pos):
                     # handle first click is mine edge case
                     if self.__clicks == 0:
+                        # start timer:
+                        timer = self.screen_rects[0]
+                        timer.start_timer()
+                        self.screen_rects[0] = timer
+
                         generate_board.mine_map_16_30[tile.y][tile.x] = 0
                         if tile.x < 27:
                             generate_board.mine_map_16_30[tile.y][tile.x + 3] = 1
