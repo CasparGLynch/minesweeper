@@ -50,13 +50,18 @@ class GameWindow(Window):
                             generate_board.mine_map_16_30[tile.y][tile.x - 3] = 1
                     if (generate_board.mine_map_16_30[tile.y][tile.x] == 1) and not \
                             (event.button == 3) and not \
-                            ((pygame.key.get_mods() & pygame.KMOD_SHIFT)): # noqa
+                            ((pygame.key.get_mods() & pygame.KMOD_SHIFT)):  # noqa
                         ret_val = ChangeWindowEvent('LoseWindow', 'lose')
-                    tile.handle_clicked(
+                    reveal = tile.handle_clicked(
                         mouse_pos=event.pos,
                         right_click=(event.button == 3),
                         shift=(pygame.key.get_mods() & pygame.KMOD_SHIFT)
                     )
+                    if reveal:
+                        neighbors = [index for index, obj in enumerate(self.screen_rects) if
+                                     ((obj.y, obj.x) in reveal)]
+                        self.reveal_neighbors(neighbors)
+
                     tile.surface.fill(tile.bkg_color_to_display())
 
                     font = pygame.font.Font('fonts/pixel.ttf', 40)
@@ -71,6 +76,22 @@ class GameWindow(Window):
                     self.screen_rects[index] = tile
                     self.__clicks += 1
             return ret_val
+
+    def reveal_neighbors(self, neighbors):
+        for index in neighbors:
+            tile = self.screen_rects[index]
+            tile.surface.fill(tile.bkg_color_to_display())
+
+            font = pygame.font.Font('fonts/pixel.ttf', 40)
+            text_surface = font.render(tile.text_to_display(), True, tile.text_color_to_display())
+            tile.surface.blit(text_surface, (9, 1))
+
+            new_rect = tile.surface.get_rect()
+            new_rect.x = tile.rect.x
+            new_rect.y = tile.rect.y
+            tile.rect = new_rect
+            self.to_be_updated.append(tile)
+            self.screen_rects[index] = tile
 
     def update(self, mouse_pos):
         pass

@@ -42,6 +42,13 @@ class TileObject(Object):
                 num_of_mines += 1
         return num_of_mines
 
+    def count_flags(self) -> int:
+        num_of_flags = 0
+        for neighbor in self.neighbors:
+            if generate_board.display_map_16_30[neighbor[0]][neighbor[1]] == 2:
+                num_of_flags += 1
+        return num_of_flags
+
     def handle_clicked(self, mouse_pos, right_click, shift):
         if self.rect.collidepoint(mouse_pos):
             if generate_board.display_map_16_30[self.y][self.x] == 0:
@@ -52,6 +59,16 @@ class TileObject(Object):
             elif generate_board.display_map_16_30[self.y][self.x] == 2:
                 if right_click or shift:
                     generate_board.display_map_16_30[self.y][self.x] = 0
+            elif generate_board.display_map_16_30[self.y][self.x] == 1:
+                if right_click or (shift == 1):
+                    # reveal neighbors if flags placed
+                    ret_val = []
+                    if self.count_mines() == self.count_flags():
+                        for neighbor in self.neighbors:
+                            if generate_board.display_map_16_30[neighbor[0]][neighbor[1]] == 0:
+                                generate_board.display_map_16_30[neighbor[0]][neighbor[1]] = 1
+                                ret_val.append((neighbor[0], neighbor[1]))
+                        return ret_val
 
     def text_to_display(self):
         if self.is_flag():
