@@ -17,7 +17,7 @@ def generate_random_index(already_taken_indexes: list):
 def set_up_board():
     board = np.zeros((16, 30))
     index_not_allowed = []
-    while len(index_not_allowed) < 99:
+    while len(index_not_allowed) <= 99:
         index_not_allowed.append(generate_random_index(index_not_allowed))
 
     for i in index_not_allowed:

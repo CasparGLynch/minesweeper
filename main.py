@@ -6,6 +6,7 @@ from windows.GameWindow import GameWindow
 from windows.LoseWindow import LoseWindow
 from windows.MainMenuWindow import MainMenuWindow
 import generate_board
+from windows.VictoryWIndow import VictoryWindow
 
 
 class Main:
@@ -17,7 +18,8 @@ class Main:
         self.windows = {
             'LoseWindow': LoseWindow,
             'MainMenuWindow': MainMenuWindow,
-            'GameWindow': GameWindow
+            'GameWindow': GameWindow,
+            'WinWindow': VictoryWindow
         }
         self.s_width = 1200
         self.s_height = 675
@@ -64,7 +66,15 @@ class Main:
                         self.screen.update()
 
             # update
-            self.currentWindow.update(pygame.mouse.get_pos())
+            switch = self.currentWindow.update(pygame.mouse.get_pos())
+            if switch:
+                to_be_updated = self.currentWindow.display()
+                for surface, rect in to_be_updated:
+                    self.display.fill((200, 200, 200), rect)
+                    self.display.blit(surface, (rect.x, rect.y))
+                    self.screen.update(rect)
+                self.currentWindow = self.windows[switch.new_window](self.s_width, self.s_height)
+                self.screen.update()
 
             # all the rectangles that have to be updated
             to_be_updated = self.currentWindow.display()

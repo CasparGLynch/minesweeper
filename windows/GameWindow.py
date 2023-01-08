@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from pygame.event import Event
 
@@ -5,6 +7,7 @@ import generate_board
 from events.ChangeWindowEvent import ChangeWindowEvent
 
 from objects.TileObject import TileObject
+from objects.TimerObject import TimerObject
 from windows.Window import Window
 
 
@@ -15,7 +18,16 @@ class GameWindow(Window):
         super().__init__(width, height)
         self.to_be_updated = []
         self.screen_rects = []
+        self.start_time = time.time()
         square_size = 30
+        # timer
+        timer_surface = pygame.Surface((100, 50))
+        timer_surface.fill((180, 180, 180))
+        timer_rect = timer_surface.get_rect()
+        timer_rect.y = 20
+        timer_rect.x = (width // 2) - 30
+        self.screen_rects.append(TimerObject(index=(-1, -1), rect=timer_rect, surface=timer_surface))
+
         # top left of grid
         grid_x = (width // 2) - (30 * square_size // 2)
         grid_y = (height // 2) - (16 * square_size // 2)
@@ -60,7 +72,7 @@ class GameWindow(Window):
                     if reveal:
                         neighbors = [index for index, obj in enumerate(self.screen_rects) if
                                      ((obj.y, obj.x) in reveal)]
-                        self.reveal_neighbors(neighbors)
+                        ret_val = self.reveal_neighbors(neighbors)
 
                     tile.surface.fill(tile.bkg_color_to_display())
 
@@ -78,6 +90,7 @@ class GameWindow(Window):
             return ret_val
 
     def reveal_neighbors(self, neighbors):
+        loose = False
         for index in neighbors:
             tile = self.screen_rects[index]
             tile.surface.fill(tile.bkg_color_to_display())
@@ -92,9 +105,31 @@ class GameWindow(Window):
             tile.rect = new_rect
             self.to_be_updated.append(tile)
             self.screen_rects[index] = tile
+            if generate_board.mine_map_16_30[tile.y][tile.x] == 1:
+                loose = True
+        if loose:
+            return ChangeWindowEvent('LoseWindow', 'lose')
 
     def update(self, mouse_pos):
-        pass
+        timer = self.screen_rects[0]
+        font = pygame.font.Font('fonts/pixel.ttf', 40)
+        text_surface = font.render(timer.get_elapsed(), True, (0, 0, 0))
+        timer.surface.fill((200, 200, 200))
+        timer.surface.blit(text_surface, (0, 0))
+        self.screen_rects[0] = timer
+        self.to_be_updated.append(timer)
+
+        # check_victory!
+        num_of_flags = 0
+        revealed_tiles = 0
+        for row in generate_board.display_map_16_30:
+            for element in row:
+                if element == 2:
+                    num_of_flags += 1
+                elif element == 1:
+                    revealed_tiles += 1
+        if (num_of_flags == 99) and (revealed_tiles == 381):
+            return ChangeWindowEvent('WinWindow', 'win')
 
     def display(self):
         ret_val = [(obj.surface, obj.rect) for obj in self.to_be_updated]
