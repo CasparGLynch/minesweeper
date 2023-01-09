@@ -13,12 +13,16 @@ class TimerObject(Object):
         self.rect = rect
         self.start_time = 00.00
 
+
+
     def get_elapsed(self):
         if not self.start_time == 00.00:
-            elapsed_time = time.time() - self.start_time
-            return f'{elapsed_time:.2f}'
+            return f'{self.start_time:.1f}'
         else:
-            return '0.00'
+            return '0.0'
 
     def start_timer(self):
-        self.start_time = time.time()
+        self.start_time = 0.0
+
+    def add_time(self):
+        self.start_time += float(1/30)

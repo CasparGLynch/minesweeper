@@ -5,6 +5,7 @@ from pygame.event import Event
 
 import generate_board
 from events.ChangeWindowEvent import ChangeWindowEvent
+from objects.ScoreBoardObject import ScoreBoardObject
 
 from objects.TileObject import TileObject
 from objects.TimerObject import TimerObject
@@ -18,7 +19,7 @@ class GameWindow(Window):
         super().__init__(width, height)
         self.to_be_updated = []
         self.screen_rects = []
-        self.start_time = time.time()
+        self.start_time = 0.0
         square_size = 30
         # timer
         timer_surface = pygame.Surface((100, 50))
@@ -27,6 +28,21 @@ class GameWindow(Window):
         timer_rect.y = 20
         timer_rect.x = (width // 2) - 30
         self.screen_rects.append(TimerObject(index=(-1, -1), rect=timer_rect, surface=timer_surface))
+        # high scord + winrate
+        self.font = pygame.font.Font('fonts/pixel.ttf', 36)
+        with open('win_rate.txt', 'r') as f:
+            lines = f.readlines()
+            try:
+                win_rate = float(lines[0]) / float(lines[1])
+            except ZeroDivisionError:
+                win_rate = 0
+            high_score = float(lines[2])
+        text_surfaces = self.font.render(f'Win rate: {round(100*win_rate)} %, High Score: {round(high_score, 2)}', True, (0, 0, 0))
+        text_rect = text_surfaces.get_rect()
+        text_rect.x = 600 - (text_rect.width//2)
+        text_rect.y = 600
+        self.to_be_updated.append(ScoreBoardObject(index=(-1, -1), rect=text_rect, surface=text_surfaces))
+
 
         # top left of grid
         grid_x = (width // 2) - (30 * square_size // 2)
@@ -47,7 +63,7 @@ class GameWindow(Window):
 
     def handle_event(self, event: Event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
+            if (event.key == pygame.K_r) and (self.__clicks < 5):
                 return ChangeWindowEvent('GameWindow', 'game_switch')
         if event.type == pygame.MOUSEBUTTONDOWN:
             ret_val = None
@@ -68,6 +84,11 @@ class GameWindow(Window):
                     if (generate_board.mine_map_16_30[tile.y][tile.x] == 1) and not \
                             (event.button == 3) and not \
                             ((pygame.key.get_mods() & pygame.KMOD_SHIFT)):  # noqa
+                        with open('win_rate.txt', 'r+') as f:
+                            lines = f.readlines()
+                            lines[1] = str(int(lines[1]) + 1) + '\n'
+                            f.seek(0)
+                            f.writelines(lines)
                         ret_val = ChangeWindowEvent('LoseWindow', 'lose')
                     reveal = tile.handle_clicked(
                         mouse_pos=event.pos,
@@ -108,7 +129,7 @@ class GameWindow(Window):
                 # continue if next is 0
                 reveal_2 = tile.get_0_neighbors()
                 rev_2 = [index for index, obj in enumerate(self.screen_rects) if
-                             ((obj.y, obj.x) in reveal_2)]
+                         ((obj.y, obj.x) in reveal_2)]
                 if rev_2:
                     self.reveal_neighbors(rev_2)
             tile.surface.fill(tile.bkg_color_to_display())
@@ -127,11 +148,18 @@ class GameWindow(Window):
                 loose = True
 
         if loose:
+            with open('win_rate.txt', 'r+') as f:
+                lines = f.readlines()
+                lines[1] = str(int(lines[1]) + 1) + '\n'
+                f.seek(0)
+                f.writelines(lines)
             return ChangeWindowEvent('LoseWindow', 'lose')
 
     def update(self, mouse_pos):
         timer = self.screen_rects[0]
         font = pygame.font.Font('fonts/pixel.ttf', 40)
+        if self.__clicks > 0:
+            timer.add_time()
         text_surface = font.render(timer.get_elapsed(), True, (0, 0, 0))
         timer.surface.fill((200, 200, 200))
         timer.surface.blit(text_surface, (0, 0))
@@ -148,6 +176,14 @@ class GameWindow(Window):
                 elif element == 1:
                     revealed_tiles += 1
         if (num_of_flags == 99) and (revealed_tiles == 381):
+            with open('win_rate.txt', 'r+') as f:
+                lines = f.readlines()
+                lines[0] = str(int(lines[0]) + 1) + '\n'
+                lines[2] = str(timer.get_elapsed())
+                f.seek(0)
+                f.writelines(lines)
+
+            # Modify the fifth line
             return ChangeWindowEvent('WinWindow', 'win')
 
     def display(self):
