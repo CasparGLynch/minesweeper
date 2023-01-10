@@ -37,12 +37,12 @@ class GameWindow(Window):
             except ZeroDivisionError:
                 win_rate = 0
             high_score = float(lines[2])
-        text_surfaces = self.font.render(f'Win rate: {round(100*win_rate)} %, High Score: {round(high_score, 2)}', True, (0, 0, 0))
+        text_surfaces = self.font.render(f'Win rate: {round(100 * win_rate)}% High Score: {round(high_score, 2)}',
+                                         True, (0, 0, 0))
         text_rect = text_surfaces.get_rect()
-        text_rect.x = 600 - (text_rect.width//2)
+        text_rect.x = 600 - (text_rect.width // 2)
         text_rect.y = 600
         self.to_be_updated.append(ScoreBoardObject(index=(-1, -1), rect=text_rect, surface=text_surfaces))
-
 
         # top left of grid
         grid_x = (width // 2) - (30 * square_size // 2)

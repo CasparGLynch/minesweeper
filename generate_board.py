@@ -3,22 +3,20 @@ import random
 import numpy as np
 
 
-def generate_random_index(already_taken_indexes: list):
-    while True:
+def generate_random_index_list():
+    already_taken_indexes = []
+    while len(already_taken_indexes) < 99:
         num_x = random.randint(0, 29)
         num_y = random.randint(0, 15)
-        for i in already_taken_indexes:
-            if i[1] == num_x:
-                if i[0] == num_y:
-                    return generate_random_index(already_taken_indexes)
-        return num_x, num_y
+        if (num_x, num_y) not in already_taken_indexes:
+            already_taken_indexes.append((num_x, num_y))
+
+    return already_taken_indexes
 
 
 def set_up_board():
     board = np.zeros((16, 30))
-    index_not_allowed = []
-    while len(index_not_allowed) <= 99:
-        index_not_allowed.append(generate_random_index(index_not_allowed))
+    index_not_allowed = generate_random_index_list()
 
     for i in index_not_allowed:
         board[i[1]][i[0]] = 1
